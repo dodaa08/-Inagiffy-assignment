@@ -18,15 +18,22 @@ function extractBankName(text?: string): string | null {
   return match ? match[0] : null;
 }
 
-// Parse all JSON objects from the response
+// Parse all JSON objects from the response, or fallback to a single JSON object if present
 function tryParseAllJSON(text?: string): any[] {
   if (!text) return [];
   // Remove code block markers and language label if present
   const cleaned = text.replace(/```json|```/gi, '').trim();
   const matches = [...cleaned.matchAll(/\{[\s\S]*?\}/g)];
-  return matches.map(m => {
+  const parsed = matches.map(m => {
     try { return JSON.parse(m[0]); } catch { return null; }
   }).filter(Boolean);
+  // Fallback: if no matches but text looks like a JSON object, try to parse it
+  if (parsed.length === 0 && cleaned.startsWith('{') && cleaned.endsWith('}')) {
+    try {
+      return [JSON.parse(cleaned)];
+    } catch {}
+  }
+  return parsed;
 }
 
 export default function CreditCardResult({ card, responseText }: CreditCardResultProps) {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const banks = ["HDFC", "Axis", "ICICI", "SBI", "Kotak", "Yes Bank", "IndusInd"];
@@ -9,19 +9,20 @@ export default function Sidebar({ onFilterChange }: { onFilterChange?: (filters:
   const [selectedBanks, setSelectedBanks] = useState<string[]>([]);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
 
+  // Call onFilterChange only after state changes, not during render
+  useEffect(() => {
+    onFilterChange?.({ banks: selectedBanks, features: selectedFeatures });
+  }, [selectedBanks, selectedFeatures, onFilterChange]);
+
   function handleBankChange(bank: string) {
-    setSelectedBanks(prev => {
-      const updated = prev.includes(bank) ? prev.filter(b => b !== bank) : [...prev, bank];
-      onFilterChange?.({ banks: updated, features: selectedFeatures });
-      return updated;
-    });
+    setSelectedBanks(prev =>
+      prev.includes(bank) ? prev.filter(b => b !== bank) : [...prev, bank]
+    );
   }
   function handleFeatureChange(feature: string) {
-    setSelectedFeatures(prev => {
-      const updated = prev.includes(feature) ? prev.filter(f => f !== feature) : [...prev, feature];
-      onFilterChange?.({ banks: selectedBanks, features: updated });
-      return updated;
-    });
+    setSelectedFeatures(prev =>
+      prev.includes(feature) ? prev.filter(f => f !== feature) : [...prev, feature]
+    );
   }
 
   return (

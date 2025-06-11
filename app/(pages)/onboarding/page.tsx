@@ -1,16 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import AnimatedBot from "@/app/components/onboarding/AnimatedBot";
 import ChatInput from "@/app/components/onboarding/ChatInput";
 import Sidebar from "@/app/components/onboarding/Sidebar";
 import LoadingOverlay from "@/app/components/onboarding/LoadingOverlay";
 import CreditCardResult from "@/app/components/onboarding/CreditCardResult";
+import { cardDetails } from "@/app/Data/cardDetails/Data";
 
 const suggestions = [
-  "Best credit cards for fuel cashback",
-  "Which cards give free lounge access?",
-  "Compare Axis Magnus vs HDFC Regalia",
-  "No annual fee cards for students"
+ 
+  "Sapphiro Credit Card",
+  "Atlas Credit Card",
+  "Privilege Credit Card (AmEx)",
+  "MakeMyTrip ICICI Bank Signature Credit Card",
+  "Cards with Lounge access",
+  "Cards with No annual fee",
+  "Best card for fuel cashback",
+  "Best card for travel rewards"
 ];
 
 export default function OnboardingPage() {
@@ -84,10 +90,13 @@ export default function OnboardingPage() {
     setBlur(false);
   };
 
-  // Handle filter changes from Sidebar
-  function handleFilterChange(newFilters: { banks: string[]; features: string[] }) {
-    setFilters(newFilters);
-  }
+  // Memoize the filter handler to prevent infinite loops
+  const handleFilterChange = useCallback(
+    (newFilters: { banks: string[]; features: string[] }) => {
+      setFilters(newFilters);
+    },
+    []
+  );
 
   // Handle Compare Mode and Save Card buttons
   function handleCompareMode() {

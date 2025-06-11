@@ -14,8 +14,8 @@ const banks = [
 ];
 
 const HeroSection = () => (
-  <section className="flex flex-col items-center justify-center min-h-screen px-6 md:px-16 animate-fade-in w-full -mt-16 ">
-    <div className="flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-6xl mx-auto">
+  <section className="flex flex-col items-center justify-between py-40 min-h-screen px-6 md:px-16 animate-fade-in w-full -mt-16 ">
+    <div className="flex flex-col  md:flex-row items-center justify-center gap-8 w-full max-w-6xl mx-auto">
       {/* Left: Headline, Subheadline, CTA */}
       <div className="flex-1 flex flex-col items-start justify-center max-w-xl">
         {/* Headline */}
@@ -67,7 +67,7 @@ const HeroSection = () => (
       </div>
     </div>
     {/* Banks Row just below hero content */}
-    <div className="flex flex-wrap justify-center items-center gap-3 mt-8 mb-0 animate-fade-in w-full max-w-4xl">
+    <div className="flex flex-wrap  gap-3  animate-fade-in w-full max-w-4xl">
       {banks.map((bank) => (
         <span key={bank.name} className={`${bank.color} px-4 py-2 rounded-full text-sm font-medium`}>
           {bank.name}

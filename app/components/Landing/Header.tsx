@@ -1,12 +1,18 @@
 "use client";
 
-import GoogleLogo from "@/app/utils/logs/google";
+import GoogleLogo from "@/app/utils/logos/google";
 import supabase from "@/app/utils/supabaseClient";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
+import Link from "next/link";
+import GitHubIcon from "@/app/utils/logos/github";
+import { FaVideo } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+
 
   useEffect(() => {
     const getUser = async () => {
@@ -40,23 +46,38 @@ export default function Header() {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     window.location.reload();
+    router.push("/");
   };
 
   return (
-    <div className="mx-auto mt-5 w-full max-w-2xl rounded-3xl bg-gray-50 shadow-lg flex items-center justify-between px-8 py-4 animate-fade-in text-center">
+    <div className="mx-auto w-full max-w-2xl rounded-3xl bg-gray-50 border-2 shadow-lg flex items-center justify-between px-7  py-2 animate-fade-in text-center">
       <div className="font-bold text-xl tracking-tight text-gray-900 select-none cursor-pointer">
         <a href="/">
-        FindCards
+          Cardify
         </a>
       </div>
-      <div className="flex gap-5 justify-center items-center">
-        <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 font-medium transition-colors cursor-pointer">How it works</a>
-      </div>
+
+
+      <div className="flex justify-center items-center gap-4 mb-2 mt-3 animate-fade-in z-10 text-l">
+            <Link href="/">
+            <div className="flex items-center border-2 gap-2 cursor-pointer border-gray-200 rounded-md px-2 text-black py-2 px-5">
+              <FaVideo />
+             <button className="cursor-pointer">Demo</button>
+            </div>
+            </Link>
+            <Link href="https://github.com/dodaa08/-Inagiffy-assignment.git" target="_blank">
+            <div className="flex items-center border-2 cursor-pointer border-gray-200 rounded-md px-2 py-1 text-black py-2 px-5">
+              <GitHubIcon />
+            <button className="cursor-pointer">Github</button>
+            </div>
+            </Link>
+        </div>
+      
       {user ? (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 cursor-pointer">
           <button
             onClick={handleSignOut}
-            className="flex justify-center items-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 font-medium px-4 py-2 rounded-full shadow transition-all border border-red-100 cursor-pointer"
+            className="flex justify-center items-center gazp-2 bg-red-50 hover:bg-red-100 text-red-700 font-medium px-4 py-2 rounded-full shadow transition-all border border-red-100 cursor-pointer"
             style={{ fontFamily: 'Roboto, Arial, sans-serif', fontWeight: 500, fontSize: '15px', height: '40px' }}
           >
             Sign out
@@ -69,9 +90,11 @@ export default function Header() {
           style={{ fontFamily: 'Roboto, Arial, sans-serif', fontWeight: 500, fontSize: '15px', height: '40px', borderRadius: '4px' }}
         >
           <GoogleLogo />
-          Sign in with Google
+           Sign In
         </button>
+        
       )}
+      
     </div>
   );
 }

@@ -19,6 +19,7 @@ export default function OnboardingPage() {
   const [blur, setBlur] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [card, setCard] = useState<any | null>(null);
+  const [filters, setFilters] = useState<{ banks: string[]; features: string[] }>({ banks: [], features: [] });
 
   // Helper: Try to extract a card from the AI response (very basic, can be improved)
   function extractCardFromResponse(text: string): any | null {
@@ -46,6 +47,18 @@ export default function OnboardingPage() {
     return null;
   }
 
+  // Build filter description for the query
+  function getFilterText() {
+    let filterText = "";
+    if (filters.banks.length > 0) {
+      filterText += ` from these banks: ${filters.banks.join(", ")}`;
+    }
+    if (filters.features.length > 0) {
+      filterText += ` with features: ${filters.features.join(", ")}`;
+    }
+    return filterText;
+  }
+
   const handleSubmit = async (msg: string) => {
     setInput(msg);
     setLoading(true);
@@ -53,10 +66,11 @@ export default function OnboardingPage() {
     setResult(null);
     setCard(null);
     try {
+      const filterText = getFilterText();
       const res = await fetch("/api/AI", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: msg })
+        body: JSON.stringify({ query: msg + filterText })
       });
       const data = await res.json();
       setResult(data.result);
@@ -70,10 +84,23 @@ export default function OnboardingPage() {
     setBlur(false);
   };
 
+  // Handle filter changes from Sidebar
+  function handleFilterChange(newFilters: { banks: string[]; features: string[] }) {
+    setFilters(newFilters);
+  }
+
+  // Handle Compare Mode and Save Card buttons
+  function handleCompareMode() {
+    alert("Compare Mode coming soon!");
+  }
+  function handleSaveCard() {
+    alert("Save Card coming soon!");
+  }
+
   return (
     <div className="bg-gray-100 min-h-screen w-full text-black flex flex-col font-sans relative" style={{ fontFamily: 'Inter, Helvetica Neue, Arial, sans-serif' }}>
       {/* Sidebar (desktop/left, mobile: drawer) */}
-      <Sidebar />
+      <Sidebar onFilterChange={handleFilterChange} />
       {/* Main content */}
       <div className={`flex flex-col items-center justify-center flex-1 transition-all duration-300 ${blur ? 'filter blur-sm pointer-events-none select-none' : ''}`} style={{ minHeight: '80vh' }}>
         <div className="flex flex-col items-center justify-center gap-8 w-full max-w-xl mx-auto pt-20 pb-8">

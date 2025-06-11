@@ -34,6 +34,7 @@ If a card matches the user's query, return ONLY the card details in this exact J
 If no card matches, return a plain text suggestion message (do not use JSON, do not greet).
 If the user is greeting, just greet (no card details, no JSON).
 Show user only one card at a time.
+can u also show the parsed json in a readable format?
 `;
 
   const response = await fetch(GEMINI_API_URL, {

@@ -5,20 +5,33 @@ interface CreditCardResultProps {
   responseText?: string;
 }
 
+// List of common bank/issuer names for extraction
+const BANK_NAMES = [
+  "Axis", "HDFC", "ICICI", "SBI", "Standard Chartered", "Kotak", "IndusInd", "Yes Bank", "HSBC", "RBL", "AU", "IDFC", "Bank of Baroda", "American Express", "Citi", "Federal", "PNB", "Canara", "Union Bank", "IDBI", "DBS", "Bank of India"
+];
+
+function extractBankName(text?: string): string | null {
+  if (!text) return null;
+  const regex = new RegExp(BANK_NAMES.join("|"), "i");
+  const match = text.match(regex);
+  return match ? match[0] : null;
+}
+
 export default function CreditCardResult({ card, responseText }: CreditCardResultProps) {
-  // Masked card number for demo
-  const maskedNumber = "1234 5678 9012 3456";
-  const expiry = "01/25";
-  const cardholder = "CARDHOLDER NAME";
+  let bankName = card?.issuer;
+  if (!bankName) {
+    bankName = extractBankName(responseText) || "Bank Name";
+  }
+  const website = card?.website || card?.source || null;
+  const mainText = responseText || card?.name || "No result found.";
 
   return (
     <div className="flex flex-col items-center w-full">
-      {/* Credit Card Visual 50/50 split */}
       <div className="relative w-[340px] h-[210px] rounded-2xl shadow-2xl overflow-hidden flex flex-col justify-between mb-6 border border-blue-100">
         {/* Top Blue Half */}
         <div className="bg-gradient-to-br from-blue-600 to-blue-400 h-1/2 w-full px-6 pt-6 flex flex-col justify-between">
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-lg tracking-wide text-white">{card.issuer || "Bank Name"}</span>
+            <span className="font-semibold text-lg tracking-wide text-white">{bankName}</span>
             <span className="font-semibold text-base text-white opacity-80">Credit Card</span>
           </div>
           <div className="flex items-center gap-3 mt-2">
@@ -31,21 +44,20 @@ export default function CreditCardResult({ card, responseText }: CreditCardResul
         {/* Bottom White Half */}
         <div className="bg-white h-1/2 w-full px-6 pb-6 flex flex-col justify-center items-center relative">
           {/* Main Response or Card Details */}
-          <div className="w-full text-center text-gray-800 text-base font-medium leading-relaxed mt-2">
-            {responseText || card.name}
+          <div className="w-full text-center text-gray-800 text-base font-semibold leading-relaxed mt-2 flex-1 flex items-center justify-center">
+            {mainText}
           </div>
-          {/* Card Number, Expiry, Cardholder (optional, can be hidden for pure response) */}
-          <div className="flex justify-between items-end w-full mt-4">
-            <div className="flex flex-col text-xs">
-              <span className="opacity-60">VALID THRU</span>
-              <span className="tracking-wider font-semibold text-gray-700">{expiry}</span>
-            </div>
-            <div className="text-lg font-mono tracking-widest text-gray-700 select-none">{maskedNumber}</div>
-            <div className="font-semibold tracking-wide text-sm text-gray-700">{cardholder}</div>
-          </div>
+          {/* Website Button */}
+          <a
+            href={website || undefined}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`absolute right-6 bottom-4 px-4 py-1.5 rounded-full font-semibold shadow transition-all text-xs ${website ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-400 cursor-not-allowed pointer-events-none'}`}
+            tabIndex={website ? 0 : -1}
+          >
+            Visit Website
+          </a>
         </div>
-        {/* Card Name Overlay (optional) */}
-        {/* <div className="absolute bottom-5 left-6 text-lg font-bold tracking-wide opacity-90 text-blue-700">{card.name}</div> */}
       </div>
     </div>
   );

@@ -6,10 +6,10 @@ const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/
 
 export async function POST(req: NextRequest) {
   const { query } = await req.json();
-
+  
   const prompt = `
 You are a credit card AI agent.
-Based on the following available card details, answer the user's query appropriately. Also respond and respond the user in less than 20 words if the query is not related to credit cards, and invite the user to ask a question. Be friendly.
+Based on the following available card details,
 
 CARD DETAILS:
 ${JSON.stringify(cardDetails, null, 2)}
@@ -17,7 +17,9 @@ ${JSON.stringify(cardDetails, null, 2)}
 QUERY:
 ${query}
 
-Respond with matching card details or inform the user if no cards match, suggesting similar ones if possible. Also tell the user proper card details and benefits in detail.
+If user is greeting you, just say "Hello, how can I help you today?"
+
+Now your job is to read all the card details and return user which the data from a specific json object. that's if card matches, all of it and if not, return the user a message that no card matches and suggest the user with some other card similar one with name and benefits and all the details. greet the user if they are greeting you in that case don't return the card details, do it only if user asks for card details, don't greet if there is no card match return the user a message that no card matches instead of greeting.
 `;
 
   const response = await fetch(GEMINI_API_URL, {

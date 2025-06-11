@@ -20,6 +20,8 @@ ${query}
 If user is greeting you, just say "Hello, how can I help you today?"
 
 Now your job is to read all the card details and return user which the data from a specific json object. that's if card matches, all of it and if not, return the user a message that no card matches and suggest the user with some other card similar one with name and benefits and all the details. greet the user if they are greeting you in that case don't return the card details, do it only if user asks for card details, don't greet if there is no card match return the user a message that no card matches instead of greeting.
+
+Also when the card matches show every detail like issuer name joining fee, annual fee, reward rate, welcome voucher, movie vouchers, lounge access, etc.
 `;
 
   const response = await fetch(GEMINI_API_URL, {

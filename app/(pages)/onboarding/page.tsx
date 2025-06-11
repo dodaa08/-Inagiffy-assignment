@@ -79,18 +79,12 @@ export default function OnboardingPage() {
         <div className="flex flex-col items-center justify-center gap-8 w-full max-w-xl mx-auto pt-20 pb-8">
           {/* Show result or bot animation */}
           {result ? (
-            card ? (
-              <CreditCardResult card={card} />
-            ) : (
-              <div className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full text-gray-800 text-lg border border-blue-50 text-center">
-                {result}
-              </div>
-            )
+            <CreditCardResult card={card} responseText={result} />
           ) : (
             <AnimatedBot />
           )}
           {/* Suggestions */}
-          <div className="w-full flex flex-col items-center gap-2 mt-6">
+          <div className="w-full flex flex-col items-center gap-2 mt-6 mb-20">
             <div className="text-gray-500 text-sm mb-1">Suggestions:</div>
             <div className="flex flex-wrap gap-2 justify-center">
               {suggestions.map(s => (

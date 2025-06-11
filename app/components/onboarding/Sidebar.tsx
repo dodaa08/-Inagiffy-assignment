@@ -4,8 +4,25 @@ import { motion, AnimatePresence } from "framer-motion";
 const banks = ["HDFC", "Axis", "ICICI", "SBI", "Kotak", "Yes Bank", "IndusInd"];
 const features = ["Lounge Access", "Cashback", "Fuel", "Travel", "No Annual Fee"];
 
-export default function Sidebar() {
+export default function Sidebar({ onFilterChange }: { onFilterChange?: (filters: { banks: string[]; features: string[] }) => void }) {
   const [open, setOpen] = useState(false);
+  const [selectedBanks, setSelectedBanks] = useState<string[]>([]);
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+
+  function handleBankChange(bank: string) {
+    setSelectedBanks(prev => {
+      const updated = prev.includes(bank) ? prev.filter(b => b !== bank) : [...prev, bank];
+      onFilterChange?.({ banks: updated, features: selectedFeatures });
+      return updated;
+    });
+  }
+  function handleFeatureChange(feature: string) {
+    setSelectedFeatures(prev => {
+      const updated = prev.includes(feature) ? prev.filter(f => f !== feature) : [...prev, feature];
+      onFilterChange?.({ banks: selectedBanks, features: updated });
+      return updated;
+    });
+  }
 
   return (
     <>
@@ -25,7 +42,7 @@ export default function Sidebar() {
           <div className="flex flex-wrap gap-2">
             {banks.map(b => (
               <label key={b} className="flex items-center gap-2 text-sm">
-                <input type="checkbox" className="accent-blue-600" /> {b}
+                <input type="checkbox" className="accent-blue-600" checked={selectedBanks.includes(b)} onChange={() => handleBankChange(b)} /> {b}
               </label>
             ))}
           </div>
@@ -35,7 +52,7 @@ export default function Sidebar() {
           <div className="flex flex-wrap gap-2">
             {features.map(f => (
               <label key={f} className="flex items-center gap-2 text-sm">
-                <input type="checkbox" className="accent-blue-600" /> {f}
+                <input type="checkbox" className="accent-blue-600" checked={selectedFeatures.includes(f)} onChange={() => handleFeatureChange(f)} /> {f}
               </label>
             ))}
           </div>
@@ -72,7 +89,7 @@ export default function Sidebar() {
                 <div className="flex flex-wrap gap-2 mb-4">
                   {banks.map(b => (
                     <label key={b} className="flex items-center gap-2 text-sm">
-                      <input type="checkbox" className="accent-blue-600" /> {b}
+                      <input type="checkbox" className="accent-blue-600" checked={selectedBanks.includes(b)} onChange={() => handleBankChange(b)} /> {b}
                     </label>
                   ))}
                 </div>
@@ -80,7 +97,7 @@ export default function Sidebar() {
                 <div className="flex flex-wrap gap-2 mb-4">
                   {features.map(f => (
                     <label key={f} className="flex items-center gap-2 text-sm">
-                      <input type="checkbox" className="accent-blue-600" /> {f}
+                      <input type="checkbox" className="accent-blue-600" checked={selectedFeatures.includes(f)} onChange={() => handleFeatureChange(f)} /> {f}
                     </label>
                   ))}
                 </div>
